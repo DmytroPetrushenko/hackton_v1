@@ -1,7 +1,8 @@
 import logging
 
-from entities.graphs import create_phishing_graph
-from entities.states import PhishingState
+from entities.graphs.bloodhound_graph import create_phishing_bloodhound
+from entities.graphs.phishing_graph import create_phishing_graph
+from entities.states import PhishingState, AIState
 
 
 def launcher_phishing_graph(initial_state: PhishingState):

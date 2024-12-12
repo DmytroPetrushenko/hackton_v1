@@ -1,5 +1,8 @@
 import operator
-from typing import TypedDict, List, Annotated, Set
+from typing import TypedDict, List, Annotated, Set, Literal
+
+from langchain_core.messages import BaseMessage
+from pydantic import BaseModel, Field
 
 
 class PhishingState(TypedDict):
@@ -7,3 +10,13 @@ class PhishingState(TypedDict):
     senders: Annotated[List[str], operator.add]      # Sources of incoming data
     error: Annotated[List[str], operator.add]        # List of errors during processing
     phishing_ids: Annotated[Set[str], operator.or_]  # IDs of messages classified as phishing
+
+
+class AIState(BaseModel):
+    messages: Annotated[List[BaseMessage], operator.add] = Field(default=list)  # List of messages to be processed
+    senders: Annotated[List[str], operator.add] = Field(default=list)  # Sources of incoming data
+
+
+class PhishingResponseSchema(BaseModel):
+    Decision: Literal["Phishing", "Clean"]
+    Explanation: str
