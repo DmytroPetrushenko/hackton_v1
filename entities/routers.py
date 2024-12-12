@@ -7,11 +7,6 @@ from entities.states import AIState
 
 
 def checker_router(state: AIState):
-    last_messages = state.messages[-1]
-
-    condition = re.compile('repeat',  re.IGNORECASE)
-
-    if re.search(condition, last_messages.content):
-        return SNIFFER
-
-    return END
+    if state.validation == "Valid":
+        return END
+    return SNIFFER

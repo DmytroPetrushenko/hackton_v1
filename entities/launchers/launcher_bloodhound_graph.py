@@ -2,7 +2,7 @@ import logging
 
 from langchain_core.messages import AIMessage
 
-from constants import MESSAGES, SENDERS
+from constants import MESSAGES, SENDERS, DECISION
 from entities.graphs.bloodhound_graph import create_phishing_bloodhound
 from entities.states import AIState
 
@@ -36,9 +36,9 @@ def launcher_bloodhound_graph(initial_message: str):
 
         # Log the updated state after execution
         logging.info("Bloodhound Graph execution completed successfully.")
-        logging.info(f"Updated state: {initial_state}")
+        logging.info(f"Bloodhound state: {evaluated}")
 
-        return evaluated.messages[-2].content
+        return evaluated.get(DECISION,  'No decision')
 
     except Exception as e:
         # Handle and log any exceptions during execution

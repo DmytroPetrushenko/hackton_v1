@@ -3,7 +3,7 @@ import re
 from googleapiclient.discovery import build
 from langchain_core.messages import AIMessage
 
-from constants import MESSAGES_ID, SENDERS, ERROR, PHISHING_IDS
+from constants import MESSAGES_ID, SENDERS, ERROR, PHISHING_IDS, PHISHING
 from entities.launchers.launcher_bloodhound_graph import launcher_bloodhound_graph
 from entities.states import PhishingState
 from utily.gmail_utils import validate_and_generate, extract_email_body, forward_email_to_security, \
@@ -99,11 +99,11 @@ def create_ai_processor_node(state: PhishingState, name: str):
                 #     'messages': [AIMessage(content=init_msg)]
                 # })
 
-                ai_result: str = launcher_bloodhound_graph(init_msg)
+                ai_decision: str = launcher_bloodhound_graph(init_msg)
 
 
                 # Classify based on AI response
-                if re.search(r'Phishing', ai_result):
+                if re.search(re.compile(PHISHING), ai_decision):
                     phishing_ids.append(message_id)
 
             except Exception as e:
