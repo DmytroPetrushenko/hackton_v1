@@ -11,9 +11,6 @@ def launcher_phishing_graph(initial_state: PhishingState):
     Initializes the graph, compiles it, and invokes with a structured state.
     Includes logging for debugging and tracking.
     """
-    # Initialize logging
-    logging.basicConfig(level=logging.INFO)
-
     try:
         # Create the phishing graph
         logging.info("Creating the phishing graph...")

@@ -13,9 +13,6 @@ def launcher_bloodhound_graph(initial_message: str):
     Initializes the graph, compiles it, and invokes with a structured state.
     Includes logging for debugging and tracking.
     """
-    # Initialize logging
-    logging.basicConfig(level=logging.INFO)
-
     try:
         # Create the phishing graph
         logging.info("Creating the bloodhound graph...")

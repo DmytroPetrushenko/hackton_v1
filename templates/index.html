@@ -3,50 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Control</title>
+    <title>System Status</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script>
+        async function checkStatus() {
+            try {
+                const response = await fetch('/logs');
+                const data = await response.json();
+                const statusElement = document.getElementById('status');
+                const logContainer = document.getElementById('log-container');
+
+                // Update logs
+                logContainer.innerHTML = data.logs.map(log => `<p>${log}</p>`).join('');
+
+                // Update system status based on logs
+                if (data.logs.some(log => log.includes("Graph execution started."))) {
+                    statusElement.textContent = "CHECKING!";
+                    statusElement.className = "status-checking";
+                } else if (data.logs.some(log => log.includes("System started."))) {
+                    statusElement.textContent = "READY TO WORK!";
+                    statusElement.className = "status-ready";
+                }
+            } catch (error) {
+                console.error("Error checking system status:", error);
+            }
+        }
+
+        async function startSystem() {
+            try {
+                const response = await fetch('/start', { method: 'POST' });
+                const data = await response.json();
+                if (data.status === "Running") {
+                    alert("System is starting...");
+                } else {
+                    alert("System is already running.");
+                }
+                checkStatus();
+            } catch (error) {
+                console.error("Error starting the system:", error);
+            }
+        }
+
+        // Poll status and logs every 3 seconds
+        setInterval(checkStatus, 3000);
+
+        // Check status on page load
+        window.onload = checkStatus;
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>System Control Panel</h1>
-        <p id="status">Status: <span class="status">Stopped</span></p>
-        <div class="buttons">
-            <button onclick="startSystem()">Start</button>
-            <button onclick="stopSystem()">Stop</button>
-        </div>
+    <div class="main-container">
         <div class="logs">
             <h2>Logs</h2>
-            <pre id="log-output"></pre>
+            <div id="log-container" class="log-container"></div>
+        </div>
+        <div class="controls">
+            <div id="status" class="status-ready">READY TO WORK!</div>
+            <button onclick="startSystem()">Start</button>
         </div>
     </div>
-
-    <script>
-        function startSystem() {
-            fetch('/start', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    document.querySelector('.status').textContent = data.status;
-                });
-        }
-
-        function stopSystem() {
-            fetch('/stop', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    document.querySelector('.status').textContent = data.status;
-                });
-        }
-
-        function fetchLogs() {
-            fetch('/logs')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('log-output').textContent = data.logs.join('\n');
-                });
-        }
-
-        // Update logs every 5 seconds
-        setInterval(fetchLogs, 5000);
-    </script>
 </body>
 </html>

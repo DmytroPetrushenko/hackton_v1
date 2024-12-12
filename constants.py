@@ -19,6 +19,6 @@ VALIDATION = 'validation'
 MESSAGE_FOLDER = 'messages'
 
 PHISHING_LABEL = 'PHISHING'
-SECURITY_MAIL = 'dpetrushenko@eisgroup.com'
+SECURITY_MAIL = 'sectest288@gmail.com'
 
 PHISHING: str = 'Phishing'
