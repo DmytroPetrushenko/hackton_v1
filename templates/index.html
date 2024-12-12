@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Control</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>System Control Panel</h1>
+        <p id="status">Status: <span class="status">Stopped</span></p>
+        <div class="buttons">
+            <button onclick="startSystem()">Start</button>
+            <button onclick="stopSystem()">Stop</button>
+        </div>
+        <div class="logs">
+            <h2>Logs</h2>
+            <pre id="log-output"></pre>
+        </div>
+    </div>
+
+    <script>
+        function startSystem() {
+            fetch('/start', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('.status').textContent = data.status;
+                });
+        }
+
+        function stopSystem() {
+            fetch('/stop', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('.status').textContent = data.status;
+                });
+        }
+
+        function fetchLogs() {
+            fetch('/logs')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('log-output').textContent = data.logs.join('\n');
+                });
+        }
+
+        // Update logs every 5 seconds
+        setInterval(fetchLogs, 5000);
+    </script>
+</body>
+</html>
